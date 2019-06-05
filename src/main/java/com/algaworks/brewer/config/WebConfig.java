@@ -2,7 +2,6 @@ package com.algaworks.brewer.config;
 
 import java.math.BigDecimal;
 import java.time.format.DateTimeFormatter;
-import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.BeansException;
@@ -19,16 +18,15 @@ import org.springframework.context.support.ReloadableResourceBundleMessageSource
 import org.springframework.data.repository.support.DomainClassConverter;
 import org.springframework.data.web.config.EnableSpringDataWebSupport;
 import org.springframework.format.datetime.standard.DateTimeFormatterRegistrar;
-import org.springframework.format.number.NumberStyleFormatter;
 import org.springframework.format.support.DefaultFormattingConversionService;
 import org.springframework.format.support.FormattingConversionService;
 import org.springframework.scheduling.annotation.EnableAsync;
-import org.springframework.web.servlet.LocaleResolver;
+import org.springframework.validation.Validator;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
-import org.springframework.web.servlet.i18n.FixedLocaleResolver;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.extras.springsecurity4.dialect.SpringSecurityDialect;
 import org.thymeleaf.spring4.SpringTemplateEngine;
@@ -37,6 +35,7 @@ import org.thymeleaf.spring4.view.ThymeleafViewResolver;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ITemplateResolver;
 
+import com.algaworks.brewer.config.format.BigDecimalFormatter;
 import com.algaworks.brewer.controller.CervejasController;
 import com.algaworks.brewer.controller.converter.CidadeConverter;
 import com.algaworks.brewer.controller.converter.EstadoConverter;
@@ -113,10 +112,12 @@ public class WebConfig extends WebMvcConfigurerAdapter implements ApplicationCon
 		conversionService.addConverter(new EstadoConverter());
 		conversionService.addConverter(new GrupoConverter());
 		
-		NumberStyleFormatter bigDecimalFormatter = new NumberStyleFormatter("#,##0.00");
+//		NumberStyleFormatter bigDecimalFormatter = new NumberStyleFormatter("#,##0.00");
+		BigDecimalFormatter bigDecimalFormatter = new BigDecimalFormatter("#,##0.00");
 		conversionService.addFormatterForFieldType(BigDecimal.class, bigDecimalFormatter);
 		
-		NumberStyleFormatter integerFormatter = new NumberStyleFormatter("#,##0");
+//		NumberStyleFormatter integerFormatter = new NumberStyleFormatter("#,##0");
+		BigDecimalFormatter integerFormatter = new BigDecimalFormatter("#,##0");	// basta não colocar as casas decimais
 		conversionService.addFormatterForFieldType(Integer.class, integerFormatter);
 		
 		// API de Datas do Java 8
@@ -128,10 +129,10 @@ public class WebConfig extends WebMvcConfigurerAdapter implements ApplicationCon
 		return conversionService;
 	}
 	
-	@Bean
-	public LocaleResolver localeResolver() {
-		return new FixedLocaleResolver(new Locale("pt", "BR"));
-	}
+//	@Bean
+//	public LocaleResolver localeResolver() {
+//		return new FixedLocaleResolver(new Locale("pt", "BR"));
+//	}
 	
 	@Bean
 	public CacheManager cacheManager () {
@@ -140,7 +141,7 @@ public class WebConfig extends WebMvcConfigurerAdapter implements ApplicationCon
 		
 		//--- o CacheBuilder é onde se passa as configirações que se deseja para o cache
 		// .maximumSize(3)  -> quantidade de entidade que se deseja manter no cache. Mantêm sempre os último 3 selecionados.
-		// .expireAfterAccess  -> tempo que se deseja que expire o cache se o mesmo ficar se ser utilizadp
+		// .expireAfterAccess  -> tempo que se deseja que expire o cache se o mesmo ficar sem ser utilizadp
 		CacheBuilder<Object, Object> cacheBuilder = CacheBuilder.newBuilder()
 				.maximumSize(3)
 				.expireAfterAccess(20, TimeUnit.SECONDS);
@@ -161,6 +162,23 @@ public class WebConfig extends WebMvcConfigurerAdapter implements ApplicationCon
 	@Bean
 	public DomainClassConverter<FormattingConversionService> domainClassConverter() {
 		return new DomainClassConverter<FormattingConversionService>(mvcConversionService());
+	}
+	
+	// vai indicar onde estarão as mensagens de validação da internacionalização, 
+	// passando o messageSource(), onde define onde estão os arquivos de validação das mensagens
+	@Bean
+	public LocalValidatorFactoryBean validator() {
+	    LocalValidatorFactoryBean validatorFactoryBean = new LocalValidatorFactoryBean();
+	    validatorFactoryBean.setValidationMessageSource(messageSource());
+	    
+	    return validatorFactoryBean;
+	}
+
+	// com este método retornando o validator(), o sistema irá saber onde buscar as mensagens de validação
+	// a partir do messages.properties
+	@Override
+	public Validator getValidator() {
+		return validator();
 	}
 	
 }

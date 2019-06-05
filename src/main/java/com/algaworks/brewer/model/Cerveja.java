@@ -42,12 +42,14 @@ public class Cerveja {
 	@Column(name = "codigo")
 	private Long codigo;
 
+//	@NotBlank(message = "SKU é obrigatório")
 	@SKU		// ver SKU.java
-	@NotBlank(message = "SKU é obrigatório")
+	@NotBlank
 	@Column(name = "sku")
 	private String sku;
 
-	@NotBlank(message = "Nome é obrigatório")
+//	@NotBlank(message = "Nome é obrigatório")
+	@NotBlank
 	@Column(name = "nome")
 	private String nome;
 

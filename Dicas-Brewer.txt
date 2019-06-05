@@ -1,0 +1,595 @@
+Erro de Time Zone
+-----------------
+
+1. Executar no banco de dados: SET @@global.time_zone = '+3:00'
+
+
+Criando Cache de informações:
+-----------------------------
+
+1-Incluir a notação @Cacheable("cidades") no arquivo controller
+2-Alterar webconfig.java para incluir a notação @EnableCaching
+3-Criar método em webconfig.java : @Bean public CacheManager cacheManager ()
+4-Para zerar o cache, incluir a notação @CacheEvict(value = "cidades"... no método que se deseja zerar ou quando
+  precisar efetuar a pesquisa novamente
+  
+Página de Pesquisa de Cidades
+-----------------------------
+
+1-criar CidadeFilter.java
+2-Criar CidadesQueries.java
+3-Criar CidadesImpl.java
+4-Colocar referência de CidadesQueries no repositório Cidades.java
+5-Criar o método "pesquisar" no controler "CidadesController.java"
+
+Trabalhando com DATAS - campo data de nascimento, tipo Localdate (Usuario.java)
+-------------------------------------------------------------------------------
+
+1-Alterar WebConfig.java, método mvcConversionService() para incluir o tratamento da data
+2-Fez-se uma pesquisa no Google com valor = bootstrap datepicker
+2.1-Acessar o git hub
+2.2-Acessar o link bootstrap-datepicker
+2.3-Acessar a pasta dist
+2.4-Abrir pasta JS
+2.5-Abrir bootstrap-datepicker.min.js e clicar em RAW, depois salvar arquivo
+2.6-Voltar até a pasta locale e abrir o arquivo bootstrap-datepicker.pt-BR.min.js, clicar em RAW, depois salavar arquivo
+2.7-copiar os dois arquivos para a pasta static/javascripts/vendors
+2.8-Voltar até a pasta CSS e abrir o arquivo bootstrap-datepicker.standalone.min.css, clicar em RAW e depois salvar o arquivo
+2.9-copiar o arquivo CSS para a pasta static/stylesheets/vendors
+3-Ver a tag <input type="text" class="form-control" id="dataNascimento" em CadastroUsuario.html
+4-Abrir brewer.js e criar a função Brewer.MaskDate para editar o campo de data de nascimento
+5-Abrir WebConfig.java e criar @Bean public MessageSource messageSource() serve para configurar o arquivo de mensagens
+
+6-Exemplo: ocorreu o seguinte erro quendo se digitou uma data igual a 45/22/888, faltando um dígito.
+  ERRO: Failed to convert property value of type [java.lang.String] to required type [java.time.LocalDate] for property 
+  dataNascimento; nested exception is org.springframework.core.convert.ConversionFailedException: Failed to convert from 
+  type [java.lang.String] to type [@javax.persistence.Column java.time.LocalDate] for value 18/05/888; nested exception 
+  is java.time.format.DateTimeParseException: Text 18/05/888 could not be parsed at index 6
+6.1-No arquivo messages.properties incluir a referência de [java.time.LocalDate] que está no erro incluíndo typeMismatch
+  no início. Parâmetro: typeMismatch.java.time.LocalDate = {0} inv\u00E1lida
+6.2-Site para obter o código unicode do acento em http://www.utf8-chartable.de/
+6.3-Código de á = u00E1	Colocar a \ antes da substituição do acento.
+6.4-O parâmetro usuario.dataNascimento = Data de nascimento tem a seguinte formatação: usuario é o objeto entity e 
+	dataNascimento é o nome definido no objeto usuario.
+6.5-O arquivo messages.properties é para tratar as mensagens de erro não tratadas do sistema que ocorre nos campos
+  
+
+VALIDANDO A SENHA
+-----------------
+
+1-Alterar a classe Usuario.java e incluir a variável @Transient private String confirmacaoSenha;
+1.1-Obs: a notação @Transient é necessária, pois este campo não será gravado no banco de dados.
+2-Incluir uma anotação do tipo @AtributoConfirmacao... (ver classe Usuario.java)
+3-Criar a classe interface AtributoConfirmacao.java. Classe responsável para fazer o link com os parâmetros passados
+  pela notação @AtributoConfirmacao. Está na pasta validation.
+4-Criar a classe AtributoConfirmacaoValidator.java. Classe onde se vai incluir o script de validação da senha.
+  Está na pasta validation/validator.
+
+
+AUTENTICANDO A SENHA BUSCANDO A SENHA NO BANCO DE DADOS
+-------------------------------------------------------
+
+1- Altera SecurityConfig.java, método protected void configure, para incluir a chamada 
+   auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
+2- Ainda em SecurityConfig.java, injetar a classe @Autowired private UserDetailsService userDetailsService;
+3- Criar a classe AppUserDetailsService que implementará a classe UserDetailsService. Gravado na pasta security
+4- No repositório de Usuarios.java, criar uma busca por email ativo. Logo, criar classe de interface UsuariosQueries.java 
+   e extendê-la na classe de repositório Usuarios.java.
+5- Criar classe UsuariosImpl.java para implementar a classe UsuariosQueries.java, onde será feito o script de acesso
+   à tabela de usuarios.
+6- Na classe SecurityConfig.java injetar o @ComponentScan(basePackageClasses = AppUserDetailsService.class), para que a
+   classe AppUserDetailsService.java seja encontrada pelo sistema. Essa classe fará a chamada à classe de repositório
+   de ususario que fara a pesquisa do usuário por email.
+
+
+CADASTRAR USUÁRIO
+-----------------
+
+1. Cria a classe interface de repositóorio: Usuarios.java
+2. Criar a classe de serviço CadastroUsuarioService.java na pasta service para incluir método de salvar
+3. Na classe ClientesController:
+3.1- criar método public ModelAndView salvar(@Valid Usuario usuario, BindingResult result, RedirectAttributes attributes) {
+	 para salvar o registro no banco de dados.
+3.2- Incluir a variável @Autowired private CadastroUsuarioService cadastroUsuarioService;
+3.3- Criar a classe EmailUsuarioJaCadastradoException.java na pasta service/exceptio
+4. Obs: a classe de serviço CadastroUsuarioService utiliza métodos gravados da classe de repositórios Usuarios.java,
+  logo, esses métodos devem ser gravados antes na classe Usuarios.
+
+
+Salvando a senha criptografada com BCrypt
+-----------------------------------------
+
+1- a tag th:classappend="${usuario.novo} ? bw-required"> indica que irá adicionar uma nova classe, a já existente,
+   quando fou um usuário novo;
+2- alterou CadastroUsuarioService para incluir nova consistência
+3- alterou UsuariosController para levantar a excessão
+4- alterar pom.xml para adicionar a dependência do Spring Securit
+5- Criar a classe de configuração SecurityConfig.java na pasta config para inclcuir o método
+   public PasswordEncoder passwordEncoder()
+6- Alterar classe AppInitializer.java para incluir a classe SecurityConfig.java
+
+
+CONFIGURAR O SPRING SECURITY
+----------------------------
+
+1- Incluído as dependências do <!-- Spring Security -->
+2- Criar uma classe para o spring security inicializar. Criado classe SecurityInitializer.java em config/init
+3- Altera SecurityConfig.java. obs. alguns métodos da classe WebSecurityConfigurerAdapter serão sobrescritos para
+   tratar questões de segurança do projeto.
+
+
+CUSTOMOZANDO PÁGINA DO LOGIN
+----------------------------
+
+1. Criar nova página de login.html
+2. Criar o controller SegurancaController.java
+3. Na página login.html, a tag <input> deve ter o parâmetro name="username" e name="password"
+4. Altera a página BarraNavecao.html para incluir o 'logout' no botão de desconexão
+5. Em SegurancaController.java, injetar @AuthenticationPrincipal User user, como parâmetro no método de login
+   para que se for chamado a tela de login e o usuário estiver logado, o sistema irá redirecionar para a 
+   página definida no return.
+
+				 
+RESTRIGINDO ACESSO ÀS PÁGINAS
+-----------------------------
+
+1. as restrinções são lançadas na classe SecurityConfig.java
+
+CARREGANDO AS PERMISSÕES DO USUÁRIO
+-----------------------------------
+
+1. Deverá ser carregado as permissões na classe AppUserDetailsService.java, pasta security. As regras de permissão
+   são configuradas no comando return new User(usuario.getEmail(), usuario.getSenha(), new HashSet<>()), no terceiro
+   parâmetro (HashSet).
+2. As definições são marcadas na classe SecurityConfig.java no parâmetro hasRole, por exemplo: hasRole("CADASTRAR_CIDADE")
+
+
+Expirando sessão com novo login:
+--------------------------------
+
+1. Incluído os parâmetros: 
+			.and()
+		.sessionManagement()
+			.maximumSessions(1)
+			.expiredUrl("/login")
+   em SecurityConfig.java
+
+Duração da sessão
+-----------------
+
+1. 1a forma: a sessão sempre será expirada:
+	a. em SecurityInitializer.java, criar os scripts servletContext.getSessionCookieConfig().setMaxAge(20);	// tempo em segundos
+	dentro do método beforeSpringSecurityFilterChain()
+2. Ou definir o tempo da sessão da seguinte forma:
+	a. incluir servletContext.setSessionTrackingModes(EnumSet.of(SessionTrackingMode.COOKIE)); em em SecurityInitializer.java
+	b. criar folder WEB-INF em src/main/webapp
+	c. em WEB-INF, criar arquivo web.xml e incluir (obs.: o tempo no xml é em minutos):
+	
+		<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
+		version="3.1">
+		
+			<session-config>
+				<session-timeout>1</session-timeout>
+			</session-config>
+			
+		</web-app>
+		
+	Obs.: se após expirar o tempo, você enviar o formulário (um POST. Exemplo quando salvar), vai ocorrer o erro
+	405-request method 'POST'not supported, uma vez que a sessão já tinha se expirado. Então precisamos alterar
+	a classe SecurityConfig.java para direcionar para uma tela customizada do sistema. No nosso exemplo, foi incluído
+	o parâmetro:
+			.and() 
+		.sessionManagement()
+			.invalidSessionUrl("/login");
+			
+
+Exibindo o usuário logado
+-------------------------
+
+1. Pesquisa no google por thymeleaf extra security
+2. acessar link https://github.com/thymeleaf/thymeleaf-extras-springsecurity
+3. incluir dependência no pom.xml (ver dependência em <!-- Thymeleaf - Extras Spring Security -->). Obs.: esta dependência
+   adiciona ao projeto alguns objetos a mais para se trabalhar com segurança nas páginas. 
+4. Abrir BarraNavegacao.html. O objeto de segurança que foi adicionado, gera o objeto ${#authentication... que será
+   incluído no th:text=
+   //<p class="navbar-text" th:text="${#authentication.name}">Usuário</p>
+   //<p class="navbar-text" th:text="${#authentication.principal.usuario.nome}">Usuário</p>
+   Obs.: (1) o parâmetro 'principal' equivale ao objeto UsuarioSistema do return do método 
+   public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException da classe
+   AppUserDetailsService.java
+   (2) o parâmetro 'usuario' equivale ao método public Usuario getUsuario() em UsuarioSistema.java
+   (3) e o 'nome' é o atributo 'nome' da classe Usuario.java, método public String getNome()
+5. Adicionar em WebConfig, o dialeto: engine.addDialect(new SpringSecurityDialect()); , no método 
+   public TemplateEngine templateEngine()
+
+ 
+ Escondendo componentes de usuários sem permissão
+ ------------------------------------------------
+ 
+ 1. Para esconder alguns objetos na tela: vamos abrir a tela de pesquisa de cidades: PesquisaCidades.html
+ 2. Adicionar o namespace na tag <html> da janela: xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+ 3. Na tag do botão Nova Cidade, incluir o parâmetro sec:authorize-url="/cidades/nova". Onde dirá se tiver permissão
+ 	para incluir cidade, vai liberar o botão. Esse controle é por URL.
+ 4. Para incluir controle por permissão, incluir na tag sec:authorize="hasRole('ROLE_CADASTRAR_CIDADE')". Se permitir cadastrar
+ 	cidade, vai apresentar o campo na tela.
+ 5. Obs.: qualquer das configurações acima de permissão podem ser usadas, pois têm a mesma funcionalidade, ou seja,
+ 	posso utilizar por URL ou por Permissão (ROLE).
+ 	
+ 
+ Segurança nos métodos
+ ---------------------
+ 
+ 1. Para incluir segurança quanto ao chamado do método, podemos incluir uma segurança no 'salvar' do controler
+ 	de Cidade (CidadesController.java), no método 'salvar()'. Incluir a notação @Secured(value="ROLE_CADASTRAR_CIDADE").
+ 	Caso seja permitido salvar, o sistema habilitará o método. Apesar que pelo controle via URL que foi colocado 
+ 	na tela já é suficiente.
+ 2. Uma outra forma seria: ... veremos isso mais adiante nas próximas aulas!!!!
+ 
+ 
+ 20 - Páginas de Erros Customizadas
+ ==================================
+ 
+ Acessando a página 403 - Acesso negado
+ --------------------------------------
+ 
+ 1. Analisando em SecurityConfig.java as permissões, vimos que foras as requisições com permissões, qualquer outra
+ 	precisa estar autenticada - .anyRequest().authenticated() -.
+ 2. Se incluirmos o parâmetro '.anyRequest().denyAll()' as demais páginas irão para a página de acesso negado
+ 	Ver : .accessDeniedPage("/403"). Existindo ou não a página, o acesso será negado, apresentando a página de
+ 	acesso negado.
+ 3. O parâmetro .anyRequest().authenticated() exige uma autenticação para a página.
+ 
+ Criando página 404 - Não encontrado
+ -----------------------------------
+ 
+ *. Inicialmento foi criado a página 404.html, com base na página 403.html, para apresentar recurso não disponível
+ *. Configurar o arquivo web.xml com:
+ 	<error-page>
+		<error-code>404</error-code>
+		<location>/404</location>
+	</error-page>
+ *. Criar arquivo ErrosController.java
+ *. Como as páginas 403 e 404 têm leiaute semelhantes, vamos colocar o header das páginas num outro leiaute padrão
+    que será chamado LayoutSimples.html, onde ficará as partes comuns das telas. Depois alterar as páginas 403 e 404.html
+
+21.1.Pesquisa com filtros avançados e multisseleção de linhas
+============================================================= 
+
+Implementando menu lateral
+--------------------------
+*. Alterar página MenuLateral.html
+*. Criar componente (processador) para colocar no menu para que o mesmo fique ativado quando selecionado (brewer:menu)
+   Este componente terá por objetivo incluir a classe is-active que fará com o item selecionado fique ativo.
+*. Incluir a importação xmlns:brewer="http://brewer.algaworks.com" na página do menu lateral
+*. Criar em thymeleaf/processor classe MenuAttributeTagProcessor.java
+*. Em seguida, adicionar a classe no dialeto: BrewerDialect.java
+*. O valor do parâmetro passado pela página é recebido no campo String attributeValue
+*. Deverá obter a URI passada através do http servlet request. A variável context é quem recebe os valores. Tem-se que
+   que fazer o cast IWebContext. 
+*. Na classe MenuAttributeTagProcessor, foi incluído um recho de código que irá interpretar a requisição passada
+   pelo html. Trecho começa com IEngineConfiguration e segue com mais scriptsn que irão interpretar a requisição
+   e retornar o parâmetro 'menu' tratado. Esse código foi retirado do thymeleaf.
+   
+ 21.3. Trabalhando no filtro por grupo
+ -------------------------------------
+ 
+ *. na tag <span th:each="grupo : ${usuario.grupos}" th:text="|${grupo.nome}${grupoStat.last ? '' : ', '}|"></span>
+    o | é um concatenação
+    grupoStat é um objeto adicionado pelo thymeleaf com as estatísticas do objeto,no caso grupo. Existe outros como:
+    grupoStat.first, grupoStat.index ... 
+    
+ 21.4. Multisseleção de linhas - ativando/desativando vários usuários
+ --------------------------------------------------------------------
+ 
+*	altera tela PesquisaUsuarios.html e incluir os código novos dos botões de habilitar/desabilitar e o checkbox
+ 	na lista de usuários.
+*	Altera classe Brewer.css e incluir o script em  /* Colunas - Pesquisa de usuários */
+*	Alterar classe UsuariosController.java e incluir método atualizarStatus()
+*	Criar arquivo JS para a seleção dos checkbox : multiselecao.js
+*	Incluir chamada na tela de pesquisa da classe multiselecao.js
+	<th:block layout:fragment="javascript-extra">
+		<script th:src="@{/javascripts/multiselecao.js}"></script>
+	</th:block>
+*	Alterar AppInitializer.java e incluir/alterar, pois o método é PUT e para receber os parâmetros precisam
+	da configuração abaixo:
+	
+	HttpPutFormContentFilter httpPutFormContentFilter = new HttpPutFormContentFilter(); 	
+	return new Filter[] { httpPutFormContentFilter };
+	
+*	Alterar classe cadastroUsuarioService.java
+*	Criado a classe ENUM StatusUsuario.java
+*	Alteradoo a classe Usuarios.java para criar o método findByCodigoIn
+*	Alterar classe model Usuario.java:
+
+	@DynamicUpdate		 foi incluído 
+
+	@PreUpdate
+	private void preUpdate() {
+		this.confirmacaoSenha = senha;
+	}
+	
+21.5. Melhorando usabilidade da página de pesquisa de usuários
+--------------------------------------------------------------
+
+*	Abrir Brewer.css para incluir alinhamento do botão do checkbob do header com os do detalhe.
+	Alterar class .table-usuarios-col-status pra incluir o align
+*	Incluir class class="js-selecao-todos" no checkbox todos
+*	Alterar arquivo multiselecao.js para incluir tratamento do checkbox marcar todos e ativar/desativar os botões
+	de ação.
+*	Alterar URL da classe multiselecao.js para não colocar fixo a string url: '/brewer/usuarios/status'
+*	Alterado o html para colocar no display de ativo/inativo botões do bootstrap
+
+21.6. Paginação da pesquisa de usuários
+---------------------------------------
+
+*	
+
+22.1. Prototipando cadastro de nova venda
+-----------------------------------------
+
+*	criado tela CadastroVenda.html
+*	criado VendasController.java
+*	alterado brewer.css para incluir novas class
+*	alterado menulateral.html
+
+22.2. Prototipando pesquisa rápida de clientes
+----------------------------------------------
+
+*	Criado tela PesquisaRapidaClientes.html. Janela Modal com th:fragment para incluir na tela de CadastroVenda.html
+*	Incluído as tag data-toggle="modal" data-target="#pesquisaRapidaClientesX" no Button de CadastroVendas.html
+*	O <th:block th:replace="cliente/PesquisaRapidaClientes :: pesquisaRapidaClientesY"></th:block> pode ser incluído
+	em qualquer lugar dentro da tag <Form> onde está o botão que faz a chamada.
+	
+22.3. Implementando a pesquisa rápida de clientes
+-------------------------------------------------
+
+*	Alterar PesquisaRapidaClientes.html e incluir th:action="@{/clientes}" no form
+*	Altera ClientesController.java para incluir chamada a pesquisa por JSON. List<Cliente> pesquisar(String nome)
+	Retornar clientes.findByNomeStartingWithIgnoreCase(nome); e criar esse método no repositório Clientes.java
+*	No html de pesquisa, incluir class para obter nome no JS do botão pesquisado.
+*	Incluir chamada <script th:src="@{/javascripts/cliente.pesquisa-rapida.js}"></script> em CadastroVendas.html
+*	Para a chamada via JSON não precisa de inicializar o endereço. Portanto, coloca-se o parâmetro @JsonIgnore em
+	no model Cliente.java
+*	Incluir no html de pesquisa:
+	<div class="alert  alert-danger  alert-dismissible  hidden  js-mensagem-erro" role="alert">
+		<button type="button" class="close" data-dismiss="alert" ><span aria-hidden="true">&times;</span></button>
+		<div><i class="fa  fa-exclamation-circle"></i>Informe pelo menos 3 letras na pesquisa</div>
+	</div>
+*	Incluir método em ClienteController para tratar o erro quando não se informa ao menos 3 carateres. Uma vez que
+	o método validarTamanhoNome lança uma exceção, retornando um BadRequest. 
+*	O parâmetro @ExceptionHandler(IllegalArgumentException.class) é quem diz qual a classe gerencia a exceção
+	chamada. Se não incluir essa classe de tratamento do erro, vai reornar um erro 500. Mas o badrequest retorna
+	um erro 400 que é um erro tratado pelo código já que não se digitou um nome com mais de 3 caracteres...
+* 	Exemplo: a classe em handler/ControllerAdviceExceptionHandler.java quem gerencia a chamada é a classe de 
+	exceção NomeEstiloJaCadastradoException.java
+*	criar o handlebar para apresentar a pesquisa efetuada. Em templates/hbs criar: TabelaPesquisaRapidaClientes.html
+*	Como a tabela vai ser carregada a partir do javascript vamos utilizar o handle bar
+*	Incluir o arquivo JS do handlebars na tela: <script th:src="@{/javascripts/vendors/handlebars.min.js}"></script>
+
+22.4. Selecionando o cliente na pesquisa rápida
+-----------------------------------------------
+
+*	Incluído data-codigo="{{codigo}}" data-nome="{{nome}}" class="js-cliente-pesquisa-rapida" na TabelaPesquisaRapidaClientes.html
+*	Incluído campo de código na tela de CadastroVendas.html
+
+22.5. Conhecendo o componente EasyAutocomplete
+----------------------------------------------
+
+*	apresentou apenas a funcionalidade e o site: http://easyautocomplete.com/
+
+22.6. Pesquisando cervejas por sku ou nome
+------------------------------------------
+
+*	criado classe CervejaDTO.java
+*	criado novo método em CervejasQueries / CervejasImpl
+*	criado novo método em CervejasController :public @ResponseBody List<CervejaDTO> pesquisar(String skuOuNome)
+
+22.7. Renderizando cervejas no autocomplete
+-------------------------------------------
+
+*	Baixar http://easyautocomplete.com/download
+*	copiar para static/javascripts/vendors arquivo jquery.easy-autocomplete.min.js
+*	copiar para static/stylesheets/vendors arquivos easy-autocomplete.min.css e easy-autocomplete.themes.css
+*	importar os arquivos css em CadastroVenda.html :
+	<link rel="stylesheet" th:href="@{/stylesheets/vendors/easy-autocomplete.min.css}"/>
+	<link rel="stylesheet" th:href="@{/stylesheets/vendors/easy-autocomplete.themes.min.css}"/>
+*	importar os arquivos js em CadastroVenda.html :
+	<script th:src="@{/javascripts/vendors/jquery.easy-autocomplete.min.js}"></script>
+*	criar arquivo venda.autocomplete-itens.js, onde terá as configurações do autocomplete.
+	importar os arquivos js em CadastroVenda.html :
+	<script th:src="@{/javascripts/venda.autocomplete-itens.js}"></script>
+*	configurado no brewer.css parâmetros para o autocomplete.
+*	criado template em hbs : TemplateAutocompleteCerveja.html
+*	incluir imortação de <th:block th:replace="hbs/TemplateAutocompleteCerveja"></th:block> em CadastroVenda.html
+*	alterar linha da variável foto no construtor de CervejaDTA.java :
+	this.foto = StringUtils.isEmpty(foto) ? "cerveja-mock.png" : foto;
+*	acessar site http://numeraljs.com/
+	fazer o download do zip
+	na pasta min, copiar arquivo numeral.min.js para a pasta javascripts/vendors
+	na pasta locale, copiar arquivo pt-br.min.js para a pasta javascripts/vendors
+*	importar os aruivos para LayoutPadrao.html
+	<script th:src="@{/javascripts/vendors/numeral.min.js}"></script>
+	<script th:src="@{/javascripts/vendors/pt-br.min.js}"></script>
+*	em Brewe.js, criar função static Brewer.formatarMoeda para retornar o valor formatado.
+ 
+ 23.5. Mantendo os itens da venda no servidor
+ --------------------------------------------
+ 
+ *	criado arquivo venda.tabela-itens.js
+ *	alterdo arquivo venda.autocomplete-itens.js
+ *	incluído importação em CadastroVenda.html
+ *	Alterado VendasController.java para fazer o mapeamento do AJAX de venda.tabela-itens.js
+ *	Altera WebConfig.java para injetar o componet TabelaItensVenda.java 
+ *	injetado os parâmetros:
+ 	//--- o @Component transforma a classe em um bean 
+	//--- o @SessionScope cria uma sessão do componente TabelaItensVenda por usuário logado.
+	@SessionScope
+	@Component
+	
+23.6. Renderizando HTML retornado do Ajax
+-----------------------------------------
+
+*	adicionado em VendasController o ModelAndView
+*	criado a página TabelaItensVenda.html a partir do html "modelo" qu estava formatado na página 
+	de CadastroVenda.html, na classe bw-tabela-cervejas
+*	adicionado junto a classe bw-tabela-cervejas a classe js-tabela-cervejas-container que irá ser utilizada
+	pelo arquivo venda.autocomplete-itens.js para adicionar o html retornado pelo AJAX
+	
+23.7. Adicionando mesmos itens na venda
+---------------------------------------
+
+*	a ideia desta aula é ao selecionar um item já selecionado, em vez de inclui-lo novamente na lista, iremos 
+	adicionar mais 1 na quantidade. Em seguida limpar o campo de digitação e manter o foco no mesmo.
+*	importar em CadatroVendas.html: xmlns:data="http://www.thymeleaf.org/extras/data"
+*	incluído em CadastroVenda.html o parâmetro data:url="@{/cervejas}" para a URL no JS
+	this.skuOuNomeInput.data('url') + '?skuOuNome=' + skuOuNome
+	
+23.8. Implementando atualização da quantidade de itens
+------------------------------------------------------
+
+*	Inclcuir xmlns:data="http://www.thymeleaf.org/extras/data" em TabelaItensVenda.html para o acesso ao código 
+	da cerveja.
+*	criado a function onQuantidadeItemAlterado(evento) em venda.autocomplete-itens.js para enviar ao servidor
+	a quantidade alterada e no retorno renderizar a tela novamente.
+*	criado novo método PUT em VendasController.java, public ModelAndView alterarQuantidadeItem, para receber
+	a quantidade alterada na tela. Foi passado também o código da cerveja para a pesquisa no servidor
+*	Em TabelaItensVenda.html foi adicionado data:codigo-cerveja="${item.cerveja.codigo}" para obter o valor
+	do código da cerveja selecionada e o mesmo ser passado para o servidor quando da alteração da quantidade.
+	
+23.9. Prototipando remoção de itens da venda
+--------------------------------------------
+
+*	a ideia é clicar duas vezes para aparecer uma caixa de exclusão para o item.
+*	incluir painel exclusão item venda em TabelaItensVenda.html
+*	incluído a tag
+	<div class="bw-tabela-item__painel-exclusao">
+		<span class="bw-tabela-item__titulo-exclusao">Excluir este item da venda?</span>
+		<button type="button" class="btn  btn-danger">Sim, excluir!</button>
+	</div>
+	em TabelaItensVenda.html
+	
+23.10. Removendo itens da venda
+-------------------------------
+
+*	alterar a classe TabelaItensVenda para incluir public void excluirItem(Cerveja cerveja)
+*	altera VendasController.java para incluir o método 
+	public ModelAndView excluirItem(@PathVariable("codigoCerveja") Cerveja cerveja)
+*	incluir em WebConfig o método 
+	@Bean
+	public DomainClassConverter<FormattingConversionService> domainClassConverter() {
+		return new DomainClassConverter<FormattingConversionService>(mvcConversionService());
+	}
+*	Ir para o JS para implementar a exclusão, passando o código da cerveja que será exxcluída.
+*	Alterar TabelaItensVenda.html, incluindo a classe .js-exclusao-item-btn no botão de exclusão
+	e incluindo o código da cerveja, data:codigo-cerveja="${item.cerveja.codigo}"
+*	Em venda.autocomplete-itens.js, incluir $('.js-exclusao-item-btn').on('click', onExclusaoItemClick.bind(this));
+
+23.11. Simulando um escopo de view
+----------------------------------
+
+*	Altera tela CadastroVenda.html para incluir um ID para a tela <input type="hidden" id="uuid" th:value="${uuid}"/>
+*	Injetado @Autowired
+	private TabelasItensSession tabelaItens; em VendasController.java
+*	Incluir private String uuid; em TabelaItensVenda.java
+*	Criado hashCode e Equal em TabelaItensVenda.java pelo identificador uuid
+*	Retirado @SessionScope e @Component de TabelaItensVenda.java
+*	Retirado private TabelaItensVenda tabelaItensVenda; de VendasController.java e substituído por
+	private TabelasItensSession tabelaItens;
+*	A sessão e o escopo passa a ser definido pela classe TabelasItensSession.java transformando a
+	classe TabelaItensVenda.java numa classe simples.
+*	TabelaItensVenda.java passa a ser utilizado na classe TabelasItensSession.java
+*	adicionado private String uuid; na TabelaItensVenda.java
+*	retirado o atributo public da classe TabelaItensVenda.java para que a classe só possa ser acessada no pacote
+	onde a mesma está inserida, ou seja, package com.algaworks.brewer.session;
+*	Ajustado a classe WebConfig.java para tratar agora a classe TabelasItensSession.java em @ComponentScan
+*	ajustado a classe de testes: TabelaItensVendaTest.java
+*	incluído em venda.autocomplete-itens.js this.uuid = $('#uuid').val();
+
+23.12. Atualizando valor total
+------------------------------
+
+*	primeira coisa, consistir entrada de dados da quantidade digitada para só permitir número
+*	criado método Brewer.recuperarValor em brewer.js
+*	criado a classe venda.js
+
+25.2. Implementando a edição de cerveja
+---------------------------------------
+
+*	abrir pesquisacevejas.html e incluir th:href="@{/cervejas/{codigo}(codigo=${cerveja.codigo})}"
+*	abrir CervejasController.java
+*	em Cerveja.java, criado métod public boolean isNova()
+	obs.: após o teste, apresentará o erro pois tentará buscar a foto de: local\.brewerfotos\temp\f511f788-dc8e-490a-8dde-9a829e3620a9_cerveja001.jpg
+	Para corrigir, faremos: 
+*	em CadastroCerveja.html, alterar as tags
+	<h1 th:if="${cerveja.nova}">Cadastro de Cerveja</h1>
+	<h1 th:unless="${!cerveja.nova}">Edição de Cerveja</h1>
+	para alterar título dependendo do caso de selecionado.
+*	Para oe saber que é para incluir ou alterar a cerveja no BD, criaremos um atributo no html com o código. Se existir, altera, senão, inclui
+	<input type="hidden" th:field="*{codigo}"/>
+*	Em CervejasController.java, alterar o @RequestMapping
+*	Ajustar FotoCerveja.html
+*	incluir atributo 
+	@Transient
+	private boolean novaFoto;
+	na classe Ceveja.java para identificar que é uma novva foto e usar esse atributo no javascript do upload da foto
+	Em seguida, criar o atributo em CadastroCerveja.html para guardar essa informação
+	Em cerveja.upload-foro.ja, inserir o acesso a esse campo: this.novaFoto = $('input[name=novaFoto]'); na função UploadFoto
+*	Alterar classe CervejaSalvaEvent.java para incluir o método public boolean isNovaFoto()
+
+25.5. Implementando o cancelamento da venda
+-------------------------------------------
+
+*	alterar SecurityConfig.java para incluir a anotação @EnableGlobalMethodSecurity(prePostEnabled = true)	
+	// permite adicionar a anotação @PreAuthorize em CadastroVendaService
+	// método 'cancelar' para incluir controle de quem vai cancelar
+*	alterar CadastraoVendaService.java para incluir a anotação
+	// @PreAuthorize --> regra de tem pode salvar 
+	@PreAuthorize("#venda.usuario == principal.usuario or hasRole('CANCELAR_VENDA')")
+	
+26.1. Prototipando o dashboard
+------------------------------
+
+*	criado o html Dashboard.html
+*	alterado MenuLateral.html para ajustar o item do menu;
+	<li class="aw-menu__item" brewer:menu="@{/}">
+		<a th:href="@{/}"><i class="fa  fa-fw  fa-home"></i><span>Dashboard</span></a>
+    </li>
+*	criado a classe do controller, DashboardController.java
+
+26.3. Conhecendo o Chartjs
+--------------------------
+
+*	Acessar site: https://www.chartjs.org/docs/latest/getting-started/installation.html
+*	Baixar Chart.min.js incluindo-o na pasta static/javascripts/vendors
+*	Em Dashboard.html, importar o javascript:
+	<th:block layout:fragment="javascript-extra">
+		<script th:src="@{/javascripts/vendors/Chart.min.js}"></script>	
+	</th:block>
+
+26.4. Gráfico - Vendas por mês
+------------------------------
+
+*	criar a classe javascript, javascript/dashborad.js para tratar o gráfico.
+*	importar a classe em Dashboard.html:
+	<th:block layout:fragment="javascript-extra">
+		<script th:src="@{/javascripts/vendors/Chart.min.js}"></script>
+		<script th:src="@{/javascripts/dashboard.graficos.js}"></script>
+	</th:block>
+
+26.5. Consultas em arquivos externos
+------------------------------------
+
+*	criado uma pasta sql em main/resources;
+*	criado o arquivo consultas-nativas.xml
+*	criar na pasta dto a classe VendaMesDTO.java. Esse objeto será enviado ao Javascript no formato JsonIgnore
+	para ser renderizados
+*	criar método public List<VendaMes> totalPorMes(); em VendasQueries.java
+*	configurar JPAConfig.java factory.setMappingResources("sql/consultas-nativas.xml"); no método
+	public EntityManagerFactory entityManagerFactory(DataSource dataSource, JpaVendorAdapter jpaVendorAdapter)
+*	Em VendasController.java incluir o método de acesso à nova pesquisa:
+	@GetMapping("/totalPorMes")
+	public @ResponseBody List<VendaMesDTO> listarTotalVendaPorMes() {
+		return vendas.totalPorMes();
+	}
+*	
