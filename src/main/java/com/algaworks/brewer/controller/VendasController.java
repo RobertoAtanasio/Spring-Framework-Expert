@@ -1,6 +1,7 @@
 	package com.algaworks.brewer.controller;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
@@ -187,9 +188,9 @@ public class VendasController {
 	
 	@PostMapping("/item")
 	public ModelAndView adicionarItem(Long codigoCerveja, String uuid) {
-		Cerveja cerveja = cervejas.findOne(codigoCerveja);
+		Optional<Cerveja> cerveja = cervejas.findById(codigoCerveja);
 //		tabelaItensVenda.adicionarItem(cerveja, 1);
-		tabelaItens.adicionarItem(uuid, cerveja, 1);
+		tabelaItens.adicionarItem(uuid, cerveja.get(), 1);
 //		ModelAndView mv = new ModelAndView("venda/TabelaItensVenda");
 //		mv.addObject("itens", tabelaItensVenda.getItens());
 //		System.out.println(">>> total de itens: " + tabelaItensVenda.total());

@@ -1,6 +1,7 @@
 package com.algaworks.brewer.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -54,9 +55,9 @@ public class CidadesController {
 	@RequestMapping("/{codigo}")
 	public ModelAndView editar(@PathVariable("codigo") Long codigo) {
 		
-		Cidade cidade = cidades.findOne(codigo);
-		ModelAndView mv = this.nova(cidade);
-		mv.addObject(cidade);
+		Optional<Cidade> cidade = cidades.findById(codigo);
+		ModelAndView mv = this.nova(cidade.get());
+		mv.addObject(cidade.get());
 		return mv;
 	}
 	
