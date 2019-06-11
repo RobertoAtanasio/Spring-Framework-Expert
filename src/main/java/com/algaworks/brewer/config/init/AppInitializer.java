@@ -14,6 +14,7 @@ import com.algaworks.brewer.config.MailConfig;
 import com.algaworks.brewer.config.S3Config;
 import com.algaworks.brewer.config.SecurityConfig;
 import com.algaworks.brewer.config.ServiceConfig;
+import com.algaworks.brewer.config.TimeZoneConfig;
 import com.algaworks.brewer.config.WebConfig;
 
 public class AppInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
@@ -22,7 +23,7 @@ public class AppInitializer extends AbstractAnnotationConfigDispatcherServletIni
 	//--- os beans que são configurados aqui, ficam disponíves no getServletConfigClasses
 	@Override
 	protected Class<?>[] getRootConfigClasses() {
-		return new Class<?>[] { JPAConfig.class, ServiceConfig.class, SecurityConfig.class, S3Config.class };
+		return new Class<?>[] { JPAConfig.class, ServiceConfig.class, SecurityConfig.class, S3Config.class, TimeZoneConfig.class };
 	}
 
 	//--- aqui ficam as configurações da web

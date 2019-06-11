@@ -18,7 +18,7 @@
 		<java.version>1.8</java.version>
 		<maven-compiler-pluging.version>3.2</maven-compiler-pluging.version>
 		<flyway-maven-plugin.version>4.0.2</flyway-maven-plugin.version>
-		<mysql-connector-java.version>5.1.39</mysql-connector-java.version>
+<!--  		<mysql-connector-java.version>8.0.15</mysql-connector-java.version> -->
 
 		<!-- Spring MVC -->
 		<spring-framework.version>4.3.0.RELEASE</spring-framework.version>
@@ -75,10 +75,13 @@
 		
 		<!-- AWS SDK - S3 -->
 		<aws-java-sdk-s3.version>1.10.77</aws-java-sdk-s3.version>
+		
+		<!-- Apache Commons DBCP -->
+		<commons-dbcp2.version>2.1.1</commons-dbcp2.version>
 	</properties>
 
 	<build>
-		<finalName>${artifactId}</finalName>
+		<finalName>${project.artifactId}</finalName>
 	
 		<plugins>
 			<plugin>
@@ -98,8 +101,25 @@
 					<driver>com.mysql.jdbc.Driver</driver>
 				</configuration>
 			</plugin>
+		      
 		</plugins>
 	</build>
+	
+	<!-- <profiles>
+		<profile>
+			<id>local</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+				<property>
+	                <name>spring.profiles.active</name>
+	                <value>local</value>
+	            </property>
+			</activation>
+		</profile>
+		<profile>
+			<id>prod</id>
+		</profile>
+	</profiles> -->
 
 	<dependencyManagement>
 		<dependencies>
@@ -203,14 +223,6 @@
     		<scope>compile</scope>
 		</dependency>
 		
-		<!-- MySQL Driver -->
-		<dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
-			<version>${mysql-connector-java.version}</version>
-			<scope>provided</scope>
-		</dependency>
-		
 		<!-- Spring Data JPA -->
 		<dependency>
 		    <groupId>org.springframework.data</groupId>
@@ -309,6 +321,14 @@
 			<groupId>com.amazonaws</groupId>
 			<artifactId>aws-java-sdk-s3</artifactId>
 			<version>${aws-java-sdk-s3.version}</version>
+		</dependency>
+		
+		<!-- Apache Commons DBCP -->
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-dbcp2</artifactId>
+			<version>${commons-dbcp2.version}</version>
+			<scope>compile</scope>
 		</dependency>
 		
 		<!-- https://mvnrepository.com/artifact/com.mchange/c3p0 -->
