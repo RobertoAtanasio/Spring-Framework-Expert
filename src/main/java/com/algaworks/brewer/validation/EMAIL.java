@@ -16,10 +16,6 @@ import javax.validation.constraints.Pattern;
 @Pattern(regexp = "^\\w*(\\.\\w*)?(\\.[a-z]+)?@\\w*\\.[a-z]+(\\.[a-z]+)?(\\.[a-z]+)?$")
 public @interface EMAIL {
 	
-	
-	
-	// video para aos 17 minutos
-	
 	/*
 
 public static boolean validar(String email)

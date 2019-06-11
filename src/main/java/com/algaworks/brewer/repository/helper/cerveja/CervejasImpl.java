@@ -8,6 +8,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -18,6 +19,7 @@ import com.algaworks.brewer.dto.CervejaDTO;
 import com.algaworks.brewer.dto.ValorItensEstoque;
 import com.algaworks.brewer.model.Cerveja;
 import com.algaworks.brewer.repository.filter.CervejaFilter;
+import com.algaworks.brewer.storage.FotoStorage;
 
 // obs: o nome da classe deve ser incicialmente igual à classe do repositório Cervejas.java. O que se pode mudar é o sufixo Impl
 // ver a explicação do sufixo na observação da classe JPAConfig.java
@@ -25,6 +27,9 @@ public class CervejasImpl implements CervejasQueries {
 	
 	@PersistenceContext
 	private EntityManager em;
+	
+	@Autowired
+	private FotoStorage fotoStorage;
 	
 	@Override
 	@Transactional(readOnly = true)
@@ -86,6 +91,7 @@ public class CervejasImpl implements CervejasQueries {
 //			System.out.println(x.getSku() + " - " + x.getNome() + " - " + x.getOrigem());
 //		}
 
+		cervejasFiltradas.forEach(c -> c.setUrlThumbnailFoto(fotoStorage.getUrl(FotoStorage.THUMBNAIL_PREFIX + c.getFoto())));
 		return cervejasFiltradas;
 	}
 

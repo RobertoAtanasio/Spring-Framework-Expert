@@ -2,7 +2,6 @@ package com.algaworks.brewer.service;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
@@ -34,8 +33,8 @@ public class CadastroVendaService {
 		if (venda.isNova()) {
 			venda.setDataCriacao(LocalDateTime.now());
 		} else {
-			Optional<Venda> vendaExistente = vendas.findById(venda.getCodigo());
-			venda.setDataCriacao(vendaExistente.get().getDataCriacao());
+			Venda vendaExistente = vendas.findOne(venda.getCodigo());
+			venda.setDataCriacao(vendaExistente.getDataCriacao());
 		}
 		
 //		BigDecimal valorTotalItens = venda.getItens().stream()
@@ -80,9 +79,9 @@ public class CadastroVendaService {
 	@PreAuthorize("#venda.usuario == principal.usuario or hasRole('CANCELAR_VENDA')")
 	@Transactional
 	public void cancelar(Venda venda) {
-		Optional<Venda> vendaExistente = vendas.findById(venda.getCodigo());
-		vendaExistente.get().setStatus(StatusVenda.CANCELADA);
-		this.salvar(vendaExistente.get());
+		Venda vendaExistente = vendas.findOne(venda.getCodigo());
+		vendaExistente.setStatus(StatusVenda.CANCELADA);
+		this.salvar(vendaExistente);
 	}
 
 //	private BigDecimal calcularValorTotal(BigDecimal valorTotalItens, BigDecimal valorFrete, BigDecimal valorDesconto) {

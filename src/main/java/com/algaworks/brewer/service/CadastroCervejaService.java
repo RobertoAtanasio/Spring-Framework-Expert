@@ -3,13 +3,11 @@ package com.algaworks.brewer.service;
 import javax.persistence.PersistenceException;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.algaworks.brewer.model.Cerveja;
 import com.algaworks.brewer.repository.Cervejas;
-import com.algaworks.brewer.service.event.cerveja.CervejaSalvaEvent;
 import com.algaworks.brewer.service.exception.ImpossivelExcluirEntidadeException;
 import com.algaworks.brewer.storage.FotoStorage;
 
@@ -25,8 +23,8 @@ public class CadastroCervejaService {
 	@Autowired
 	private Cervejas cervejas;
 	
-	@Autowired
-	private ApplicationEventPublisher publisher;
+//	@Autowired
+//	private ApplicationEventPublisher publisher;
 	
 	@Autowired
 	private FotoStorage fotoStorage;
@@ -45,7 +43,7 @@ public class CadastroCervejaService {
 		// Normalmente colocamos ações que devem ser efetivadas somente após determinada coisa acontecer. Em vez
 		// de incluir no objeto que salva as alterações no banco de dados, colocamos em um listenner
 		
-		publisher.publishEvent(new CervejaSalvaEvent(cerveja));
+//		publisher.publishEvent(new CervejaSalvaEvent(cerveja));
 	}
 	
 	@Transactional

@@ -2,6 +2,8 @@ package com.algaworks.brewer.config.init;
 
 import javax.servlet.Filter;
 import javax.servlet.MultipartConfigElement;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
 import javax.servlet.ServletRegistration.Dynamic;
 
 import org.springframework.web.filter.HttpPutFormContentFilter;
@@ -9,17 +11,18 @@ import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatche
 
 import com.algaworks.brewer.config.JPAConfig;
 import com.algaworks.brewer.config.MailConfig;
+import com.algaworks.brewer.config.S3Config;
 import com.algaworks.brewer.config.SecurityConfig;
 import com.algaworks.brewer.config.ServiceConfig;
 import com.algaworks.brewer.config.WebConfig;
 
 public class AppInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
-
+	
 	//--- os repositórios são configurados antes da parte web
 	//--- os beans que são configurados aqui, ficam disponíves no getServletConfigClasses
 	@Override
 	protected Class<?>[] getRootConfigClasses() {
-		return new Class<?>[] { JPAConfig.class, ServiceConfig.class, SecurityConfig.class };
+		return new Class<?>[] { JPAConfig.class, ServiceConfig.class, SecurityConfig.class, S3Config.class };
 	}
 
 	//--- aqui ficam as configurações da web
@@ -53,5 +56,12 @@ public class AppInitializer extends AbstractAnnotationConfigDispatcherServletIni
 	@Override
 	protected void customizeRegistration(Dynamic registration) {
 		registration.setMultipartConfig(new MultipartConfigElement(""));
+	}
+	
+	@Override
+	public void onStartup(ServletContext servletContext) throws ServletException {
+		super.onStartup(servletContext);
+		// se não informar qual a profile da aplicação, será assumida a local
+		servletContext.setInitParameter("spring.profiles.default", "local");
 	}
 }

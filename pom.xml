@@ -43,10 +43,10 @@
 		<hibernate.version>5.1.0.Final</hibernate.version>
 		
 		<!-- Spring Data JPA -->
-		<spring-data-jpa.version>1.10.2.RELEASE</spring-data-jpa.version>
+		<spring-data-jpa.version>1.11.22.RELEASE</spring-data-jpa.version>
 		
 		<!-- Jackson - JSON -->
-		<jackson-core.version>2.7.5</jackson-core.version>
+		<jackson-core.version>2.9.9</jackson-core.version>
 		
 		<!-- thumbnailator - Gerar Thumbnail -->
  		<!-- https://github.com/coobird/thumbnailator -->
@@ -72,6 +72,9 @@
 		
 		<!-- Java Mail -->
 		<javax.mail.version>1.5.6</javax.mail.version>
+		
+		<!-- AWS SDK - S3 -->
+		<aws-java-sdk-s3.version>1.10.77</aws-java-sdk-s3.version>
 	</properties>
 
 	<build>
@@ -300,6 +303,13 @@
             <version>${javax.mail.version}</version>
             <scope>compile</scope>
         </dependency>
+        
+        <!-- AWS SDK - S3 -->
+		<dependency>
+			<groupId>com.amazonaws</groupId>
+			<artifactId>aws-java-sdk-s3</artifactId>
+			<version>${aws-java-sdk-s3.version}</version>
+		</dependency>
 		
 		<!-- https://mvnrepository.com/artifact/com.mchange/c3p0 -->
 		<dependency>

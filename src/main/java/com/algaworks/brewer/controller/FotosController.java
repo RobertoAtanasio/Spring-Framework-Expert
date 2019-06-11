@@ -14,6 +14,9 @@ import com.algaworks.brewer.dto.FotoDTO;
 import com.algaworks.brewer.storage.FotoStorage;
 import com.algaworks.brewer.storage.FotoStorageRunnable;
 
+// o @RequestMapping("/fotos") mapeia as fotod em FotoCerveja.html : <img th:src="@{/fotos/{{foto}}}"></img>
+// na qual é acessado pelo método recuperar (abaixo).
+
 @RestController
 @RequestMapping("/fotos")		// parâmetro formatado no javascript action: '/brewer/fotos' do settings
 public class FotosController {
@@ -42,12 +45,12 @@ public class FotosController {
 		return resultado;
 	}
 
-//	public byte[] recuperarFotoTemporaria(@PathVariable("nome") String nomeFoto) {
-//  caso queira mudar o nome do parâmetro para nomeFoto
-	@GetMapping("/temp/{nome:.*}")
-	public byte[] recuperarFotoTemporaria(@PathVariable String nome) {
-		return fotoStorage.recuperarFotoTemporaria(nome);
-	}
+////	public byte[] recuperarFotoTemporaria(@PathVariable("nome") String nomeFoto) {
+////  caso queira mudar o nome do parâmetro para nomeFoto
+//	@GetMapping("/temp/{nome:.*}")
+//	public byte[] recuperarFotoTemporaria(@PathVariable String nome) {
+//		return fotoStorage.recuperarFotoTemporaria(nome);
+//	}
 
 	//--- o .* é uma expressão regular que recebe qualquer coisa após o ponto (.)
 	@GetMapping("/{nome:.*}")

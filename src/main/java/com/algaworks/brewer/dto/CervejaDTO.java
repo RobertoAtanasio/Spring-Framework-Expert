@@ -14,6 +14,7 @@ public class CervejaDTO {
 	private String origem;
 	private BigDecimal valor;
 	private String foto;
+	private String urlThumbnailFoto;
 
 	public CervejaDTO(Long codigo, String sku, String nome, Origem origem, BigDecimal valor, String foto) {
 		this.codigo = codigo;
@@ -71,6 +72,14 @@ public class CervejaDTO {
 
 	public void setFoto(String foto) {
 		this.foto = foto;
+	}
+
+	public String getUrlThumbnailFoto() {
+		return urlThumbnailFoto;
+	}
+
+	public void setUrlThumbnailFoto(String urlThumbnailFoto) {
+		this.urlThumbnailFoto = urlThumbnailFoto;
 	}
 
 }

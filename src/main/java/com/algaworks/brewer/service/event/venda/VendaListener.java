@@ -1,7 +1,5 @@
 package com.algaworks.brewer.service.event.venda;
 
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
@@ -19,9 +17,9 @@ public class VendaListener {
 	@EventListener
 	public void vendaEmitida(VendaEvent vendaEvent) {
 		for (ItemVenda item : vendaEvent.getVenda().getItens()) {
-			Optional<Cerveja> cerveja = cervejas.findById(item.getCerveja().getCodigo());
-			cerveja.get().setQuantidadeEstoque(cerveja.get().getQuantidadeEstoque() - item.getQuantidade());
-			cervejas.save(cerveja.get());
+			Cerveja cerveja = cervejas.findOne(item.getCerveja().getCodigo());
+			cerveja.setQuantidadeEstoque(cerveja.getQuantidadeEstoque() - item.getQuantidade());
+			cervejas.save(cerveja);
 		}
 	}
 }
