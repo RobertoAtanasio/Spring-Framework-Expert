@@ -594,25 +594,14 @@ Implementando menu lateral
 	}
 *	
 
+29.4. Emitindo relatório com Spring MVC
+---------------------------------------
 
-
-<!-- https://mvnrepository.com/artifact/com.mchange/c3p0 -->
-		<dependency>
-		    <groupId>com.mchange</groupId>
-		    <artifactId>c3p0</artifactId>
-		    <version>0.9.5.2</version>
-		</dependency>
-		
-		<!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
-		<dependency>
-		    <groupId>mysql</groupId>
-		    <artifactId>mysql-connector-java</artifactId>
-		    <version>8.0.15</version>
-		</dependency>
-		
-		<!-- https://mvnrepository.com/artifact/com.mchange/mchange-commons-java -->
-		<dependency>
-		    <groupId>com.mchange</groupId>
-		    <artifactId>mchange-commons-java</artifactId>
-		    <version>0.2.15</version>
-		</dependency>
+*	em resources, criar pasta relatorios para guardar o arquivo compilado de extensão .jasper
+*	Configurar uma nova ViewResolver para o JasperReports eWebConfig.java abaixo
+	public ViewResolver jasperReportsViewResolver(DataSource datasource)
+*	criar nova pasta em templates/relatorio
+*	criar html RelatorioVendasEmitidas.html
+*	criar em com.algaworks.brewer.dto a classe PeriodoRelatorio.java para uso no html do relatório
+*	criar a classe RelatoriosController.java em com.algaworks.brewer.controller; para acesso aos dados do relatório
+*	adicionar em MenuLateral.html a chamada para o relatório

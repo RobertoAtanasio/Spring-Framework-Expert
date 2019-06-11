@@ -18,11 +18,10 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import com.algaworks.brewer.model.Cerveja;
 import com.algaworks.brewer.repository.Cervejas;
-import com.algaworks.brewer.repository.Estilos;
 
 @Configuration
 @ComponentScan(basePackageClasses = { Cervejas.class })
-@EnableJpaRepositories(basePackageClasses = {Cervejas.class, Estilos.class}, enableDefaultTransactions=false, repositoryImplementationPostfix="Impl")
+@EnableJpaRepositories(basePackageClasses = {Cervejas.class}, enableDefaultTransactions=false, repositoryImplementationPostfix="Impl")
 // a implementação do repositório CervejasQueries (ver Cervejas.java) tem por default a inclusão do sufixo Impl (ver acima). 
 // Caso você decida usar essa implementação default, não é necessário incluir o parâmetro repositoryImplementationPostfix="Impl".
 @EnableTransactionManagement
@@ -39,7 +38,6 @@ public class JPAConfig {
 //	@Profile("prod")
 //	@Bean
 //	public DataSource dataSourceProd() throws URISyntaxException {
-//		System.out.println(">>>>> prod DataSource");
 //		URI jdbUri = new URI(System.getenv("JAWSDB_URL"));
 //
 //	    String username = jdbUri.getUserInfo().split(":")[0];
@@ -51,7 +49,7 @@ public class JPAConfig {
 //	    dataSource.setUrl(jdbUrl);
 //	    dataSource.setUsername(username);
 //	    dataSource.setPassword(password);
-//	    dataSource.setInitialSize(5);
+//	    dataSource.setInitialSize(10);
 //	    return dataSource;
 //	}
 	
