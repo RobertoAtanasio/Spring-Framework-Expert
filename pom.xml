@@ -338,14 +338,6 @@
 			<scope>compile</scope>
 		</dependency>
 		
-		<!-- https://mvnrepository.com/artifact/jasperreports/jasperreports -->
-		<!-- <dependency>
-		    <groupId>jasperreports</groupId>
-		    <artifactId>jasperreports</artifactId>
-		    <version>3.5.3</version>
-		</dependency> -->
-		
-		
 		<!-- JasperReports -->
 		<dependency>
 			<groupId>net.sf.jasperreports</groupId>
@@ -360,9 +352,6 @@
 		    <version>${jasperreports-fonts.version}</version>
 		    <scope>compile</scope>
 		</dependency>
-		
-		
-		
 		
 		<!-- https://mvnrepository.com/artifact/com.mchange/c3p0 -->
 		<dependency>
