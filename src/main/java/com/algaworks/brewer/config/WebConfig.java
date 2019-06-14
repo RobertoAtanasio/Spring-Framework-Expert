@@ -156,6 +156,9 @@ public class WebConfig extends WebMvcConfigurerAdapter implements ApplicationCon
 		//--- o ConcurrentMapCacheManager é um cache com pouco recursos, por isso não se aconselha usar em produção.
 //		return new ConcurrentMapCacheManager();
 		
+		// Estamos utilizando na classe CidadesController, método 
+		// public @ResponseBody List<Cidade> pesquisarPorCodigoEstado
+		
 		//--- o CacheBuilder é onde se passa as configirações que se deseja para o cache
 		// .maximumSize(3)  -> quantidade de entidade que se deseja manter no cache. Mantêm sempre os último 3 selecionados.
 		// .expireAfterAccess  -> tempo que se deseja que expire o cache se o mesmo ficar sem ser utilizadp
@@ -167,6 +170,13 @@ public class WebConfig extends WebMvcConfigurerAdapter implements ApplicationCon
 		cacheManager.setCacheBuilder(cacheBuilder);
 		return cacheManager;
 	}
+	
+//	@Bean
+//	public CacheManager cacheManager() throws Exception {
+//		return new JCacheCacheManager(Caching.getCachingProvider().getCacheManager(
+//				getClass().getResource("/cache/ehcache.xml").toURI(),
+//				getClass().getClassLoader()));
+//	}
 	
 	@Bean
 	public MessageSource messageSource() {

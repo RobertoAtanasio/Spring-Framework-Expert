@@ -30,6 +30,7 @@ public class JPAConfig {
 //	@Profile("local")
 	@Bean
 	public DataSource dataSource() {
+		System.out.println(">>>>>>>>>> DataSource");
 		JndiDataSourceLookup dataSourceLookup = new JndiDataSourceLookup();
 		dataSourceLookup.setResourceRef(true);
 		return dataSourceLookup.getDataSource("jdbc/brewerDB");

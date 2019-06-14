@@ -28,7 +28,6 @@ public class RelatoriosController {
 	
 	@PostMapping("/vendasEmitidas")
 	public ModelAndView gerarRelatorioVendasEmitidas(PeriodoRelatorio periodoRelatorio) {
-		Map<String, Object> parametros = new HashMap<>();
 		
 		// converter a data de LocalDateTime para tipo Date, pois o jasper report está definido como Date
 		
@@ -38,6 +37,7 @@ public class RelatoriosController {
 				.atZone(ZoneId.systemDefault()).toInstant());
 		
 		// parâmetros
+		Map<String, Object> parametros = new HashMap<>();
 		parametros.put("format", "pdf");
 		parametros.put("data_inicio", dataInicio);	// "data_inicio" = ao definido no jasper report
 		parametros.put("data_fim", dataFim);

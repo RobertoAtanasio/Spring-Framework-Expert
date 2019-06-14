@@ -605,3 +605,28 @@ Implementando menu lateral
 *	criar em com.algaworks.brewer.dto a classe PeriodoRelatorio.java para uso no html do relatório
 *	criar a classe RelatoriosController.java em com.algaworks.brewer.controller; para acesso aos dados do relatório
 *	adicionar em MenuLateral.html a chamada para o relatório
+
+
+
+Projetos:
+
+C:\Users\Cli\eclipse-workspace\brewer		--> primeira versão
+
+C:\Algaworks								--> versão atualizarStatus
+
+
+32.3. Alterando classes de configuração
+---------------------------------------
+
+*	a pasta config/init toda não será mais utilizada, pois o spring boot já faz as inicializações
+*	a classe config/JPAConfig.java será removida
+*	a classe config/ServiceConfig.java será removida
+*	a classe BrewerDialect é transformada em @Component
+*	incluído o @Component nas classes EstiloConverter(), CidadeConverter(), EstadoConverter() e GrupoConverter()
+*	na classe ClassForErrorAttributeTagProcessor alterou o import de org.thymeleaf.spring4.util.FieldUtils;
+	para org.thymeleaf.spring5.util.FieldUtils;
+*	a pasta src/main/webapp não será mais utilizada, logo, será excluída
+
+
+
+
