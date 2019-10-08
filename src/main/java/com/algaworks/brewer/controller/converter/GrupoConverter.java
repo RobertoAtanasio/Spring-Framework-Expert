@@ -1,6 +1,7 @@
 package com.algaworks.brewer.controller.converter;
 
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.stereotype.Component;
 import org.thymeleaf.util.StringUtils;
 
 import com.algaworks.brewer.model.Grupo;
@@ -8,6 +9,7 @@ import com.algaworks.brewer.model.Grupo;
 //Criou a classe converter, deve-se configurá-la em WebConfig.java
 //Os parâmertos significam: convert de quem para quem (Strig para Estilo
 
+@Component
 public class GrupoConverter implements Converter<String, Grupo> {
 
 	@Override

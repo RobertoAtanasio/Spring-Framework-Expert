@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="pt" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/LayoutSimples}">
+
+<!-- página de erro padrão do sistema onde é chamaao toda vez que ocorrer um erro no sistema -->
+
+<!-- a tag <th:block não é renderizada. Serve para a utilizar propriedades -->
+
+<th:block layout:fragment="conteudo">
+	<th:block th:replace="|fragments/erros/${status}|" />
+</th:block>
+</html>

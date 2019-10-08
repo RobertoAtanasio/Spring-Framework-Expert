@@ -17,11 +17,11 @@ import javax.persistence.NamedQuery;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.validator.constraints.Email;
-import org.hibernate.validator.constraints.NotBlank;
 
 import com.algaworks.brewer.validation.AtributoConfirmacao;
 
@@ -33,8 +33,11 @@ import com.algaworks.brewer.validation.AtributoConfirmacao;
 @Entity
 @Table(name = "usuario")
 @NamedQueries({
-	@NamedQuery(name="Usuario.findAllUsuariosInner",query="SELECT u FROM Usuario u inner join fetch u.grupos")
+	@NamedQuery(name="Usuario.findAllUsuariosInner",query="SELECT u FROM Usuario u inner join fetch u.grupos"),
+	@NamedQuery(name="Usuario.findUsuarioGrupo",query="SELECT u FROM Usuario u inner join fetch u.grupos"),
+	@NamedQuery(name="Usuario.findUsuarioGrupoIn",query="SELECT u FROM Usuario u inner join fetch u.grupos g WHERE g.codigo IN (:codigos)")
 })
+
 @DynamicUpdate		// faz com que o update seja apenas nos campos alterados
 public class Usuario implements Serializable {
 
@@ -142,6 +145,13 @@ public class Usuario implements Serializable {
 
 	public boolean isNovo() {
 		return this.codigo == null;
+	}
+	
+	public boolean isExisteGrupo() {
+		if (this.getGrupos() == null) {
+			return false;
+		}
+		return !this.getGrupos().isEmpty();
 	}
 	
 	@Override

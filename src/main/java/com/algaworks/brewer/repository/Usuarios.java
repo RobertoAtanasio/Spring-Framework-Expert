@@ -14,6 +14,8 @@ public interface Usuarios extends JpaRepository<Usuario, Long>, UsuariosQueries 
 	
 	public List<Usuario> findByCodigoIn(Long[] codigos);
 	
+	public Usuario findByCodigo (Long codigo);
+	
 	//--- Esta classe foi substituída pela incplementação da classe UsuariosQueries.javav
 //	public Optional<Usuario> findByEmailIgnoreCaseAndAtivoTrue (String email);
 

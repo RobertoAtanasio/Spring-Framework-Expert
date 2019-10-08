@@ -84,10 +84,10 @@
 	            				<label></label>
 	            			</div>
 	            		</th>
-	            		<th>Nome</th>
-	                	<th>E-mail</th>
+	            		<th><brewer:order page="${pagina}" field="nome" text="Nome"/></th>
+	                	<th><brewer:order page="${pagina}" field="email" text="E-mail"/></th>
 	                	<th>Grupo</th>
-	                	<th>Status</th>
+	                	<th><brewer:order page="${pagina}" field="ativo" text="Status"/></th>
 	                 	<th class="table-col-acoes"></th>
 					</tr>
 				</thead>
@@ -119,7 +119,9 @@
 							<a class="btn  btn-link  btn-xs" title="Editar" th:href="@{/usuarios/{codigo}(codigo=${usuario.codigo})}"> 
 								<i class="glyphicon glyphicon-pencil"></i>
 							</a>
-							<a class="btn  btn-link  btn-xs" title="Excluir">
+							<a class="btn  btn-link  btn-xs  js-tooltip  js-exclusao-btn" title="Excluir" href="#" 
+									data:url="@{/usuarios/{codigo}(codigo=${usuario.codigo})}"
+									data:objeto="${usuario.nome}">
 								<i class="glyphicon glyphicon-remove"></i>
 							</a>
 						</td>

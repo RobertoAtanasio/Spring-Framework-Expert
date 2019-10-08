@@ -19,6 +19,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -27,6 +29,11 @@ import org.hibernate.annotations.DynamicUpdate;
 
 @Entity
 @Table(name = "venda")
+
+//@NamedQueries({
+//	@NamedQuery(name="Venda.existeUsuario",query="SELECT v FROM Venda v inner join fetch u.usuario WHERE u.codigo = :codigo")
+//})
+
 @DynamicUpdate			// atualizar apenas o que foi alterado
 public class Venda {
 

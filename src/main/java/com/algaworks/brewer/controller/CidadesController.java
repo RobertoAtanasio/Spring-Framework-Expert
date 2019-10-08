@@ -54,7 +54,7 @@ public class CidadesController {
 	@RequestMapping("/{codigo}")
 	public ModelAndView editar(@PathVariable("codigo") Long codigo) {
 		
-		Cidade cidade = cidades.findOne(codigo);
+		Cidade cidade = cidades.getOne(codigo);
 		ModelAndView mv = this.nova(cidade);
 		mv.addObject(cidade);
 		return mv;

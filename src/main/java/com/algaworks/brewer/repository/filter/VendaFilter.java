@@ -14,21 +14,20 @@ public class VendaFilter {
 	private LocalDate ate;
 	private BigDecimal valorMinimo;
 	private BigDecimal valorMaximo;
-
 	private String nomeCliente;
 	private String cpfOuCnpjCliente;
 
-	public VendaFilter() {
-
-	     this.valorMinimo = BigDecimal.valueOf(0.00);
-	     this.status = StatusVenda.ORCAMENTO;
-	     this.valorMaximo = BigDecimal.valueOf(100.00);
-
-	     LocalDate dataManipulacao = LocalDate.now();
-	     this.desde = dataManipulacao.minusDays(30); // 30 dias atrás
-
-	     this.ate = LocalDate.now();
-	}
+//	public VendaFilter() {
+//
+//	     this.valorMinimo = BigDecimal.valueOf(0.00);
+//	     this.status = StatusVenda.ORCAMENTO;
+//	     this.valorMaximo = BigDecimal.valueOf(100.00);
+//
+//	     LocalDate dataManipulacao = LocalDate.now();
+//	     this.desde = dataManipulacao.minusDays(30); // 30 dias atrás
+//
+//	     this.ate = LocalDate.now();
+//	}
 	
 	public Long getCodigo() {
 		return codigo;

@@ -1,32 +1,25 @@
 package com.algaworks.brewer.config.format;
 
 import java.math.BigDecimal;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
-import java.text.ParseException;
 import java.util.Locale;
 
-import org.springframework.format.Formatter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
+import org.springframework.stereotype.Component;
 
-public class BigDecimalFormatter implements Formatter<BigDecimal> {
+@Component
+public class BigDecimalFormatter extends FormatarNumero<BigDecimal> {
 
-	private DecimalFormat decimalFormat;
+	@Autowired
+	private Environment env;
 	
-	public BigDecimalFormatter(String pattern) {
-		NumberFormat format = NumberFormat.getInstance(new Locale("pt", "BR"));
-		decimalFormat = (DecimalFormat) format;
-		decimalFormat.setParseBigDecimal(true);
-		decimalFormat.applyPattern(pattern);
-	}
-	
+	// o parâmetro "#,##0.00", abaixo, poderia ter definido em application.properties: bigdecimal.format=#,##0.00
+	// O terceiro parãmetro é o padrão, caso não existe o formato informdo no application.properties.
 	@Override
-	public String print(BigDecimal object, Locale locale) {
-		return decimalFormat.format(object);
+	public String pattern(Locale locale) {
+		return env.getProperty("bigdecimal.format", "#,##0.00");
 	}
 
-	@Override
-	public BigDecimal parse(String text, Locale locale) throws ParseException {
-		return (BigDecimal) decimalFormat.parse(text);
-	}
+	
 
 }

@@ -135,7 +135,7 @@ public class ClientesImpl implements ClientesQueries {
 				ON p.codigoprenota = nf.codigoprenota
 				where nf.codigoprenota IS NULL
 
-				 * fica fortadado da seguinte forma:
+				 * fica formatado da seguinte forma:
  				Query query = _em.createQuery("SELECT p FROM Prenota p LEFT JOIN p.prenotaNotafiscalCollection nf "
                           + " WHERE nf.prenota IS NULL"
                           + " AND "

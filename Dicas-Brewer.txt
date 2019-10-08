@@ -626,7 +626,24 @@ C:\Algaworks								--> versão atualizarStatus
 *	na classe ClassForErrorAttributeTagProcessor alterou o import de org.thymeleaf.spring4.util.FieldUtils;
 	para org.thymeleaf.spring5.util.FieldUtils;
 *	a pasta src/main/webapp não será mais utilizada, logo, será excluída
+*	o arquivo de consultas nativas vamos renomeá-lo para ficar no padrão spring boot para que o gráfico funcione, pois
+	o mesmo utiliza consultas nativas:
+	** a pasta de sql para META-INF
+	** o arquivo consultas-nativas.xml para orm.xml
 
+32.12. Criando classes conversoras para datas
+---------------------------------------------
+
+*	criado a classe public abstract class TemporalFormatter<T extends Temporal> implements Formatter<T>
+*	criado as classes:
+	** public class LocalTimeFormatter extends TemporalFormatter<LocalTime>
+	** public class LocalDateFormatter extends TemporalFormatter<LocalDate>
+	** public class LocalDateTimeFormatter extends TemporalFormatter<LocalDateTime>
+	
+32.13. Criando classes conversoras para moedas
+----------------------------------------------
+
+*	
 
 
 

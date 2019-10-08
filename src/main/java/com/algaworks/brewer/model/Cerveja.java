@@ -22,10 +22,10 @@ import javax.validation.constraints.DecimalMax;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.util.StringUtils;
 
 import com.algaworks.brewer.repository.listener.CervejaEntityListener;
@@ -45,14 +45,14 @@ public class Cerveja {
 	@Column(name = "codigo")
 	private Long codigo;
 
-//	@NotBlank(message = "SKU é obrigatório")
+	@NotBlank(message = "SKU é obrigatório")
 	@SKU		// ver SKU.java
-	@NotBlank
+//	@NotBlank
 	@Column(name = "sku")
 	private String sku;
 
-//	@NotBlank(message = "Nome é obrigatório")
-	@NotBlank
+	@NotBlank(message = "Nome é obrigatório")
+//	@NotBlank
 	@Column(name = "nome")
 	private String nome;
 

@@ -45,7 +45,7 @@ public class CervejasImpl implements CervejasQueries {
 	    	    
 	    org.springframework.data.domain.Sort sort = pageable.getSort();
 
-		if (sort != null) {
+		if (sort != null && sort.isSorted()) {
 
 			org.springframework.data.domain.Sort.Order order = sort.iterator().next();
 

@@ -1,7 +1,6 @@
 	package com.algaworks.brewer.controller;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
@@ -68,10 +67,12 @@ public class VendasController {
 	@Autowired
 	private Mailer mailer;
 	
-	@InitBinder("venda")
-	public void inicializarValidador(WebDataBinder binder) {
-		binder.setValidator(vendaValidator);
-	}
+	// Por estarmos utilizando o componente VendaValidator, o método abaixo fica sem utilidade
+	
+//		@InitBinder("venda")
+//		public void inicializarValidador(WebDataBinder binder) {
+//			binder.setValidator(vendaValidator);
+//		}
 	
 //	@Autowired
 //	private TesteService testeService;
@@ -188,7 +189,7 @@ public class VendasController {
 	
 	@PostMapping("/item")
 	public ModelAndView adicionarItem(Long codigoCerveja, String uuid) {
-		Cerveja cerveja = cervejas.findOne(codigoCerveja);
+		Cerveja cerveja = cervejas.getOne(codigoCerveja);
 //		tabelaItensVenda.adicionarItem(cerveja, 1);
 		tabelaItens.adicionarItem(uuid, cerveja, 1);
 //		ModelAndView mv = new ModelAndView("venda/TabelaItensVenda");
@@ -258,8 +259,11 @@ public class VendasController {
 		try {
 			cadastroVendaService.cancelar(venda);
 		} catch (AccessDeniedException e) {
-			System.out.println(">>>>>>>> cancelar >>>>>>");
-			return new ModelAndView("/403");
+//			return new ModelAndView("/403");	// antes da página padrão de erro
+			// -- renderizar a página padrão de erro passando o status.
+			ModelAndView mv = new ModelAndView("error");
+			mv.addObject("status", 403);
+			return mv;
 		} 
 		
 		attributes.addFlashAttribute("mensagem", "Venda cancelada com sucesso");

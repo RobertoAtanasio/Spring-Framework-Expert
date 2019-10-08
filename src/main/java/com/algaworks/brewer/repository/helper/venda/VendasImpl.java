@@ -125,7 +125,7 @@ public class VendasImpl implements VendasQueries {
 	@Override
 	public List<VendaMesDTO> totalPorMes() {
 		
-		//--- executar a consulta nativa. Ver main/resources/sql/consultas-nativas.xml
+		//--- executar a consulta nativa. Ver main/resources/META-INF/orm.xml
 		List<VendaMesDTO> vendasMes = manager.createNamedQuery("Vendas.totalPorMes", VendaMesDTO.class).getResultList();
 		
 		//--- o tratamento abaixo é para os casos onde não tem valor no ano/mês

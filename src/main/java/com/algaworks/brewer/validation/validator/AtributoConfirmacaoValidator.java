@@ -28,11 +28,12 @@ public class AtributoConfirmacaoValidator implements ConstraintValidator<Atribut
 		this.atributo = atributoConfirmacao.atributo();
 		this.atributoConfirmacao = atributoConfirmacao.atributoConfirmacao();
 		
-//		System.out.println(">>>> Valores A: " + this.atributo + " / " + this.atributoConfirmacao);
+		System.out.println(">>>> Valores A: " + this.atributo + " / " + this.atributoConfirmacao);
 		
 	}
 	
-	//--- obs.: por exemplo, Object abaixo é = Usuario. Que é o mesmo objeto definido acima na implements da classe
+	//--- obs.: Por exemplo, Object abaixo é = Usuario. Que é o mesmo objeto definido acima na implements da classe.
+	//          Recuperar valores dos atributos.
 	@Override
 	public boolean isValid(Object object, ConstraintValidatorContext context) {
 		boolean valido = false;

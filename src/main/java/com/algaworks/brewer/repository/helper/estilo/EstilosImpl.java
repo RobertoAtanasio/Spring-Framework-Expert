@@ -22,7 +22,7 @@ import com.algaworks.brewer.repository.filter.EstiloFilter;
 public class EstilosImpl implements EstilosQueries {
 
 	@PersistenceContext
-	private EntityManager manager;
+	private EntityManager em;
 	
 	@Override
 	@Transactional(readOnly = true)
@@ -32,17 +32,13 @@ public class EstilosImpl implements EstilosQueries {
 		int totalRegistrosPorPagina = pageable.getPageSize();
 		int primeiroRegistro = paginaAtual * totalRegistrosPorPagina;
 		
-//		System.out.println(">>>>>>>>> paginaAtual: " + paginaAtual);
-//		System.out.println(">>>>>>>>> totalRegistrosPorPagina: " + totalRegistrosPorPagina);
-//		System.out.println(">>>>>>>>> primeiroRegistro: " + primeiroRegistro);
-		
-		CriteriaBuilder cb = manager.getCriteriaBuilder();
+		CriteriaBuilder cb = em.getCriteriaBuilder();
 	    CriteriaQuery<Estilo> cq = cb.createQuery(Estilo.class);
 	    Root<Estilo> root = cq.from(Estilo.class);
 	    
 	    Sort sort = pageable.getSort();
 	    
-	    if (sort != null) {
+	    if (sort != null && sort.isSorted()) {
 	    	
 	    	Order order = sort.iterator().next();
 			String property = order.getProperty();
@@ -62,12 +58,15 @@ public class EstilosImpl implements EstilosQueries {
 	    	cq.select(root);
 	    }
 	    
-	    List<Estilo> lista = manager.createQuery(cq)
+	    List<Estilo> lista = em.createQuery(cq)
 	    		.setFirstResult(primeiroRegistro)
 	    		.setMaxResults(totalRegistrosPorPagina)
 	    		.getResultList();
 	    
-	    int qtde = manager.createQuery(cq).getResultList().size();
+	    int qtde = em.createQuery(cq).getResultList().size();
+	    
+//	    System.out.println(">>> qtde lista: " + lista.size());
+//	    System.out.println(">>> qtde: " + qtde);
 	    
 	    return new PageImpl<> (lista, pageable, Long.valueOf(qtde));
 	}
